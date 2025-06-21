@@ -1,12 +1,24 @@
 function Header() {
   return (
-    <header>
-      <h1>커뮤니티</h1>
-      <nav>
-        <a href="/">홈</a>
-        <a href="/posts">게시판</a>
-        <a href="/login">로그인</a>
-      </nav>
+    <header className="navbar bg-base-100 shadow-lg">
+      <div className="flex-1">
+        <a href="/" className="btn btn-ghost text-xl">
+          My Community
+        </a>
+      </div>
+      <div className="flex-none">
+        <ul className="menu menu-horizontal px-1">
+          <li>
+            <a href="/">홈</a>
+          </li>
+          <li>
+            <a href="/posts">게시판</a>
+          </li>
+          <li>
+            <a href="/login">로그인</a>
+          </li>
+        </ul>
+      </div>
     </header>
   );
 }
