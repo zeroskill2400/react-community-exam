@@ -41,17 +41,49 @@ function App() {
   ];
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">게시물 목록</h1>
-      <ul>
-        {posts.map((post) => (
-          <li key={post.id} className="border-b p-4">
-            <h2 className="text-xl font-semibold">{post.title}</h2>
-            <p className="text-gray-600">작성자: {post.author}</p>
-            <p className="text-gray-400 text-sm">작성일: {post.createdAt}</p>
-          </li>
-        ))}
-      </ul>
+    <div className="container mx-auto p-4 lg:p-8">
+      <div className="mb-8">
+        <h1 className="text-4xl font-extrabold mb-2">자유 게시판</h1>
+        <p className="text-gray-500">다양한 이야기를 나눠보세요.</p>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="table table-zebra w-full">
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>제목</th>
+              <th>작성자</th>
+              <th>작성일</th>
+            </tr>
+          </thead>
+          <tbody>
+            {posts.map((post) => (
+              <tr key={post.id} className="hover">
+                <th>{post.id}</th>
+                <td>
+                  <a href="#" className="link link-hover">
+                    {post.title}
+                  </a>
+                </td>
+                <td>{post.author}</td>
+                <td>{post.createdAt}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex justify-between items-center mt-8">
+        <div className="join">
+          <button className="join-item btn">«</button>
+          <button className="join-item btn btn-active">1</button>
+          <button className="join-item btn">2</button>
+          <button className="join-item btn">3</button>
+          <button className="join-item btn">»</button>
+        </div>
+        <button className="btn btn-primary">글쓰기</button>
+      </div>
     </div>
   );
 }
