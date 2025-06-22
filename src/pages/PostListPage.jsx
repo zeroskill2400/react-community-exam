@@ -1,17 +1,33 @@
 import { useState, useEffect } from "react";
+import Pagination from "../components/Pagination";
 
 function PostListPage() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const itemsPerPage = 20;
+
   useEffect(() => {
     const fetchPosts = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
-        const response = await fetch("/posts");
+        const response = await fetch(
+          `/posts?_page=${currentPage}&_limit=${itemsPerPage}`
+        );
         if (!response.ok) {
           throw new Error("네트워크 응답이 올바르지 않습니다.");
         }
+
+        const totalCount = parseInt(
+          response.headers.get("X-Total-Count") || "0",
+          10
+        );
+        setTotalPages(Math.ceil(totalCount / itemsPerPage));
+
         const data = await response.json();
         setPosts(data);
       } catch (e) {
@@ -22,7 +38,13 @@ function PostListPage() {
     };
 
     fetchPosts();
-  }, []);
+  }, [currentPage]);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   if (isLoading) {
     return <div className="p-8 text-center">로딩 중...</div>;
@@ -67,13 +89,11 @@ function PostListPage() {
       </div>
 
       <div className="flex justify-between items-center mt-8">
-        <div className="join">
-          <button className="join-item btn">«</button>
-          <button className="join-item btn btn-active">1</button>
-          <button className="join-item btn">2</button>
-          <button className="join-item btn">3</button>
-          <button className="join-item btn">»</button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
         <button className="btn btn-primary">글쓰기</button>
       </div>
     </div>
