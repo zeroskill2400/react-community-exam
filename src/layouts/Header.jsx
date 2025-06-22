@@ -1,21 +1,23 @@
+import { Link } from "react-router-dom";
+
 function Header() {
   return (
     <header className="navbar bg-base-100 shadow-lg">
       <div className="flex-1">
-        <a href="/" className="btn btn-ghost text-xl">
+        <Link to="/" className="btn btn-ghost text-xl">
           My Community
-        </a>
+        </Link>
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a href="/">홈</a>
+            <Link to="/">홈</Link>
           </li>
           <li>
-            <a href="/posts">게시판</a>
+            <Link to="/posts">게시판</Link>
           </li>
           <li>
-            <a href="/login">로그인</a>
+            <Link to="/login">로그인</Link>
           </li>
         </ul>
       </div>
