@@ -1,46 +1,36 @@
-function PostListPage() {
-  const posts = [
-    {
-      id: 1,
-      title: "첫 번째 게시물",
-      author: "작성자1",
-      createdAt: "2024-05-21",
-    },
-    {
-      id: 2,
-      title: "두 번째 게시물",
-      author: "작성자2",
-      createdAt: "2024-05-20",
-    },
-    {
-      id: 3,
-      title: "세 번째 게시물",
-      author: "작성자3",
-      createdAt: "2024-05-19",
-    },
-    {
-      id: 4,
-      title: "네 번째 게시물",
-      author: "작성자4",
-      createdAt: "2024-05-18",
-    },
-    {
-      id: 5,
-      title: "다섯 번째 게시물",
-      author: "작성자5",
-      createdAt: "2024-05-17",
-    },
-    {
-      id: 6,
-      title: "여섯 번째 게시물",
-      author: "작성자6",
-      createdAt: "2024-05-16",
-    },
-  ];
+import { useState, useEffect } from "react";
 
-  fetch("/api/users")
-    .then((res) => res.json())
-    .then((data) => console.log(data)); // { name: 'Zero Skill', age: 24 }
+function PostListPage() {
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch("/posts");
+        if (!response.ok) {
+          throw new Error("네트워크 응답이 올바르지 않습니다.");
+        }
+        const data = await response.json();
+        setPosts(data);
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  if (isLoading) {
+    return <div className="p-8 text-center">로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div className="p-8 text-center text-red-500">에러: {error}</div>;
+  }
 
   return (
     <div className="container mx-auto p-4 lg:p-8">
