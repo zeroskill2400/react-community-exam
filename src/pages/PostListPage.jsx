@@ -38,6 +38,10 @@ function PostListPage() {
     },
   ];
 
+  fetch("/api/users")
+    .then((res) => res.json())
+    .then((data) => console.log(data)); // { name: 'Zero Skill', age: 24 }
+
   return (
     <div className="container mx-auto p-4 lg:p-8">
       <div className="mb-8">
