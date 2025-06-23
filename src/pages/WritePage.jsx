@@ -23,11 +23,27 @@ function WritePage() {
   });
 
   // 3. 폼 제출 시 실행될 함수 정의 (유효성 검사 통과 후)
-  const onSubmit = (data) => {
-    console.log("제출된 데이터:", data);
-    // 현재는 콘솔에만 출력합니다.
-    // 성공적으로 처리 후 목록 페이지로 이동합니다.
-    navigate("/posts");
+  const onSubmit = async (data) => {
+    try {
+      const response = await fetch("/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // 폼 데이터를 JSON 문자열로 변환하여 body에 담아 전송
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("서버에서 게시물 생성에 실패했습니다.");
+      }
+
+      // 요청이 성공적으로 완료된 후, 목록 페이지로 이동
+      navigate("/posts");
+    } catch (error) {
+      console.error("게시물 작성 중 에러 발생:", error);
+      alert("게시물 작성 중 오류가 발생했습니다.");
+    }
   };
 
   return (

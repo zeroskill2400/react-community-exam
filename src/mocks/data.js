@@ -6,6 +6,7 @@ const generatePosts = () => {
       id: i,
       title: `게시물 제목 ${i}`,
       author: `작성자${(i % 10) + 1}`,
+      content: `이것은 게시물 내용 ${i}입니다. 여기에 상세한 내용이 들어갑니다.`,
       createdAt: new Date(Date.now() - Math.random() * 1000 * 60 * 60 * 24 * 30)
         .toISOString()
         .split("T")[0], // 최근 30일 내 랜덤 날짜
