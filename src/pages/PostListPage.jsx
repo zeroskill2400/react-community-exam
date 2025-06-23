@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
 
 function PostListPage() {
@@ -94,7 +95,9 @@ function PostListPage() {
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
-        <button className="btn btn-primary">글쓰기</button>
+        <Link to="/write" className="btn btn-primary">
+          글쓰기
+        </Link>
       </div>
     </div>
   );

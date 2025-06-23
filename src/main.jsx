@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PostListPage from "./pages/PostListPage.jsx";
+import WritePage from "./pages/WritePage.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
 
 async function enableMocking() {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "posts",
         element: <PostListPage />,
+      },
+      {
+        path: "write",
+        element: <WritePage />,
       },
       // 앞으로 다른 페이지들을 이곳에 추가할 수 있습니다.
       // { path: "login", element: <LoginPage /> }
