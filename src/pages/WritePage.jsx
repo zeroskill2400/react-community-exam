@@ -31,55 +31,72 @@ function WritePage() {
   };
 
   return (
-    <div>
-      <h1>새 게시물 작성 (기능만)</h1>
+    <div className="max-w-4xl mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">새 게시물 작성</h1>
 
-      {/* 4. handleSubmit으로 onSubmit 함수를 감싸서 form에 연결 */}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="title">제목</label>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div className="form-control">
+          <label className="label" htmlFor="title">
+            <span className="label-text">제목</span>
+          </label>
           <input
             id="title"
             type="text"
-            {...register("title")} // 'title' 필드로 등록
-            className="border border-black"
+            placeholder="제목을 입력하세요"
+            className="input input-bordered w-full"
+            {...register("title")}
           />
           {errors.title && (
-            <p style={{ color: "red" }}>{errors.title.message}</p>
+            <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>
           )}
         </div>
 
-        <div>
-          <label htmlFor="author">작성자</label>
+        <div className="form-control">
+          <label className="label" htmlFor="author">
+            <span className="label-text">작성자</span>
+          </label>
           <input
             id="author"
             type="text"
-            {...register("author")} // 'author' 필드로 등록
-            className="border border-black"
+            placeholder="이름을 입력하세요"
+            className="input input-bordered w-full"
+            {...register("author")}
           />
           {errors.author && (
-            <p style={{ color: "red" }}>{errors.author.message}</p>
+            <p className="text-red-500 text-xs mt-1">{errors.author.message}</p>
           )}
         </div>
 
-        <div>
-          <label htmlFor="content">내용</label>
+        <div className="form-control">
+          <label className="label" htmlFor="content">
+            <span className="label-text">내용</span>
+          </label>
           <textarea
             id="content"
-            {...register("content")} // 'content' 필드로 등록
-            className="border border-black"
+            placeholder="내용을 입력하세요"
+            className="textarea textarea-bordered h-48 w-full"
+            {...register("content")}
           />
           {errors.content && (
-            <p style={{ color: "red" }}>{errors.content.message}</p>
+            <p className="text-red-500 text-xs mt-1">
+              {errors.content.message}
+            </p>
           )}
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="border border-black"
+          className="btn btn-primary w-full"
         >
-          {isSubmitting ? "제출 중..." : "제출하기"}
+          {isSubmitting ? (
+            <>
+              <span className="loading loading-spinner"></span>
+              제출 중...
+            </>
+          ) : (
+            "제출하기"
+          )}
         </button>
       </form>
     </div>
