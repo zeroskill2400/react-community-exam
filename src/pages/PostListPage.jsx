@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
+import { fetchPosts } from "../apis/postApi";
 
 function PostListPage() {
   const [posts, setPosts] = useState([]);
@@ -12,25 +13,17 @@ function PostListPage() {
   const itemsPerPage = 20;
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const loadPosts = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(
-          `/posts?_page=${currentPage}&_limit=${itemsPerPage}`
+        const { posts: fetchedPosts, totalCount } = await fetchPosts(
+          currentPage,
+          itemsPerPage
         );
-        if (!response.ok) {
-          throw new Error("네트워크 응답이 올바르지 않습니다.");
-        }
 
-        const totalCount = parseInt(
-          response.headers.get("X-Total-Count") || "0",
-          10
-        );
         setTotalPages(Math.ceil(totalCount / itemsPerPage));
-
-        const data = await response.json();
-        setPosts(data);
+        setPosts(fetchedPosts);
       } catch (e) {
         setError(e.message);
       } finally {
@@ -38,7 +31,7 @@ function PostListPage() {
       }
     };
 
-    fetchPosts();
+    loadPosts();
   }, [currentPage]);
 
   const handlePageChange = (page) => {
@@ -82,7 +75,7 @@ function PostListPage() {
                   </a>
                 </td>
                 <td>{post.author}</td>
-                <td>{post.createdAt}</td>
+                <td>{post.created_at.split("T")[0]}</td>
               </tr>
             ))}
           </tbody>
