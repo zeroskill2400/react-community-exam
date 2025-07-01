@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../libs/supabase";
+import { useUserStore } from "../stores/userStore";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -25,6 +26,7 @@ function LoginPage() {
       return;
     }
 
+    useUserStore.getState().setUser(data.user);
     console.log("로그인 성공:", data);
     alert("로그인 성공! 콘솔을 확인하세요.");
   };
