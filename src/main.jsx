@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PostListPage from "./pages/PostListPage.jsx";
 import WritePage from "./pages/WritePage.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: "write",
         element: <WritePage />,
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
       },
       // 앞으로 다른 페이지들을 이곳에 추가할 수 있습니다.
       // { path: "login", element: <LoginPage /> }
