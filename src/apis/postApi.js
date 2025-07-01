@@ -1,3 +1,5 @@
+import { supabase } from "../libs/supabase";
+
 export const fetchPosts = async (page = 1, limit = 20) => {
   const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
   const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -9,30 +11,19 @@ export const fetchPosts = async (page = 1, limit = 20) => {
   }
 
   const offset = (page - 1) * limit;
-  const requestUrl = `${SUPABASE_URL}/rest/v1/posts?select=*&order=id.desc&limit=${limit}&offset=${offset}`;
 
-  const response = await fetch(requestUrl, {
-    headers: {
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      Prefer: "count=exact",
-    },
-  });
+  const { data, count, error } = await supabase
+    .from("posts")
+    .select("*", { count: "exact" })
+    .order("id", { ascending: false })
+    .range(offset, offset + limit - 1);
 
-  if (!response.ok) {
-    throw new Error("네트워크 응답이 올바르지 않습니다.");
+  if (error) {
+    throw new Error(error.message);
   }
 
-  const contentRange = response.headers.get("Content-Range");
-
-  const totalCount = contentRange
-    ? parseInt(contentRange.split("/")[1], 10)
-    : 0;
-
-  const data = await response.json();
-
   return {
-    posts: data,
-    totalCount,
+    posts: data ?? [],
+    totalCount: count ?? 0,
   };
 };
