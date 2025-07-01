@@ -14,7 +14,12 @@ export const fetchPosts = async (page = 1, limit = 20) => {
 
   const { data, count, error } = await supabase
     .from("posts")
-    .select("*", { count: "exact" })
+    .select(
+      `
+      id, title, content, created_at,
+      users(email)
+    `
+    )
     .order("id", { ascending: false })
     .range(offset, offset + limit - 1);
 

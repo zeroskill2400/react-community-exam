@@ -74,7 +74,7 @@ function PostListPage() {
                     {post.title}
                   </a>
                 </td>
-                <td>{post.author}</td>
+                <td>{post.users.email}</td>
                 <td>{post.created_at.split("T")[0]}</td>
               </tr>
             ))}
