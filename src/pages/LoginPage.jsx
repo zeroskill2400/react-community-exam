@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { supabase } from "../libs/supabase";
 import { useUserStore } from "../stores/userStore";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,8 +30,7 @@ function LoginPage() {
     }
 
     useUserStore.getState().setUser(data.user);
-    console.log("로그인 성공:", data);
-    alert("로그인 성공! 콘솔을 확인하세요.");
+    navigate("/");
   };
 
   return (
