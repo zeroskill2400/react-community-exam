@@ -92,7 +92,7 @@ function PostListPage() {
         />
         {user && (
           <Link to="/write" className="btn btn-primary">
-            글쓰기
+            글쓰기 TSTS
           </Link>
         )}
       </div>
