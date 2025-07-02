@@ -42,7 +42,7 @@ function WritePage() {
       navigate("/posts");
     } catch (error) {
       console.error("게시물 작성 중 에러 발생:", error);
-      alert("게시물 작성 중 오류가 발생했습니다.");
+      alert("게시물 작성 중 오류가 발생했습니다...");
     }
   };
 
