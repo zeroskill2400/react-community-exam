@@ -72,9 +72,9 @@ function PostListPage() {
               <tr key={post.id} className="hover">
                 <th>{post.id}</th>
                 <td>
-                  <a href="#" className="link link-hover">
+                  <Link to={`/posts/${post.id}`} className="link link-hover">
                     {post.title}
-                  </a>
+                  </Link>
                 </td>
                 <td>{post.users.email}</td>
                 <td>{post.created_at.split("T")[0]}</td>
@@ -92,7 +92,7 @@ function PostListPage() {
         />
         {user && (
           <Link to="/write" className="btn btn-primary">
-            글쓰기 TSTS
+            글쓰기
           </Link>
         )}
       </div>
