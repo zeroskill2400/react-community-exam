@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PostListPage from "./pages/PostListPage.jsx";
+import PostDetailPage from "./pages/PostDetailPage.jsx";
 import WritePage from "./pages/WritePage.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "posts",
         element: <PostListPage />,
+      },
+      {
+        path: "posts/:id",
+        element: <PostDetailPage />,
       },
       {
         path: "write",
