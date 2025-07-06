@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useUserStore } from "../stores/userStore";
+import { postPosts } from "../apis/postApi";
 
 // 1. Zod로 유효성 검사 스키마 정의
 const postSchema = z.object({
@@ -33,17 +35,17 @@ function WritePage() {
     setErrors({});
 
     try {
-      const response = await fetch("/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(result.data),
-      });
-
-      if (!response.ok) {
-        throw new Error("서버에서 게시물 생성에 실패했습니다.");
+      const { user } = useUserStore.getState();
+      if (!user) {
+        throw new Error("사용자 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
       }
+
+      const dataToSend = {
+        ...result.data,
+        userId: user.id,
+      };
+
+      await postPosts(dataToSend);
 
       navigate("/posts");
     } catch (error) {
