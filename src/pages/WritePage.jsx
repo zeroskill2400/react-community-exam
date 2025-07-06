@@ -16,12 +16,15 @@ function WritePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setErrors({});
+
     const dataToValidate = { title, content };
     const result = postSchema.safeParse(dataToValidate);
-    console.log("result", result);
 
     if (!result.success) {
       const fieldErrors = {};
@@ -29,10 +32,9 @@ function WritePage() {
         fieldErrors[err.path[0]] = err.message;
       });
       setErrors(fieldErrors);
-      console.log("fieldErrors", fieldErrors);
+      setIsLoading(false);
       return;
     }
-    setErrors({});
 
     try {
       const { user } = useUserStore.getState();
@@ -50,7 +52,9 @@ function WritePage() {
       navigate("/posts");
     } catch (error) {
       console.error("게시물 작성 중 에러 발생:", error);
-      alert("게시물 작성 중 오류가 발생했습니다.");
+      alert(error.message || "게시물 작성 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -72,6 +76,7 @@ function WritePage() {
             }`}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            disabled={isLoading}
           />
           {errors.title && (
             <label className="label">
@@ -92,6 +97,7 @@ function WritePage() {
             }`}
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            disabled={isLoading}
           />
           {errors.content && (
             <label className="label">
@@ -102,8 +108,16 @@ function WritePage() {
           )}
         </div>
 
-        <button type="submit" className="btn btn-primary w-full">
-          게시물 작성
+        <button
+          type="submit"
+          className="btn btn-primary w-full"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <span className="loading loading-spinner"></span>
+          ) : (
+            "게시물 작성"
+          )}
         </button>
       </form>
     </div>
