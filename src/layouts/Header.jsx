@@ -1,8 +1,19 @@
 import { Link } from "react-router-dom";
 import { useUserStore } from "../stores/userStore";
+import { useCartStore } from "../stores/cartStore";
+import { useEffect } from "react";
 
 function Header() {
   const user = useUserStore((s) => s.user);
+  const { cartItemCount, loadCartItems } = useCartStore();
+
+  // 사용자 로그인 시 장바구니 데이터 로드
+  useEffect(() => {
+    if (user) {
+      loadCartItems(user.id);
+    }
+  }, [user, loadCartItems]);
+
   return (
     <header className="navbar bg-base-100 shadow-lg">
       <div className="flex-1">
@@ -18,6 +29,21 @@ function Header() {
           <li>
             <Link to="/posts">게시판</Link>
           </li>
+          <li>
+            <Link to="/products">상품</Link>
+          </li>
+          {user && (
+            <li>
+              <Link to="/cart" className="relative">
+                <span className="text-xl">🛒</span>
+                {cartItemCount > 0 && (
+                  <span className="badge badge-primary badge-sm absolute -top-2 -right-2">
+                    {cartItemCount}
+                  </span>
+                )}
+              </Link>
+            </li>
+          )}
           {!user && (
             <>
               <li>
