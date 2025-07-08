@@ -38,7 +38,7 @@ function ProductListPage() {
           <div key={product.id}>
             <figure>
               <img
-                src={product.imageUrl}
+                src={product.image_url}
                 alt={product.name}
                 style={{ width: "150px", height: "150px", objectFit: "cover" }}
               />
