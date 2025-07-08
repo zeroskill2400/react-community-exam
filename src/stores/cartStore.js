@@ -27,7 +27,29 @@ const useCartStore = create(
             return { cart: updatedCart };
           }
         }),
-      // 추후 여기에 removeFromCart, clearCart 등의 액션을 추가할 수 있습니다.
+      removeFromCart: (productId) =>
+        set((state) => ({
+          cart: state.cart.filter((item) => item.id !== productId),
+        })),
+      increaseQuantity: (productId) =>
+        set((state) => ({
+          cart: state.cart.map((item) =>
+            item.id === productId
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          ),
+        })),
+      decreaseQuantity: (productId) =>
+        set((state) => ({
+          cart: state.cart
+            .map((item) =>
+              item.id === productId
+                ? { ...item, quantity: Math.max(0, item.quantity - 1) }
+                : item
+            )
+            .filter((item) => item.quantity > 0), // 수량이 0이 된 상품은 장바구니에서 제거
+        })),
+      clearCart: () => set({ cart: [] }),
     }),
     {
       name: "cart-storage", // local storage에 저장될 때 사용될 키 이름입니다.
