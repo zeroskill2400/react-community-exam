@@ -31,24 +31,33 @@ function ProductListPage() {
   }
 
   return (
-    <div>
-      <h1>상품 목록</h1>
-      <div>
+    <div className="p-4">
+      <h1 className="text-3xl font-bold text-center mb-6">상품 목록</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (
-          <div key={product.id}>
+          <div key={product.id} className="card bg-base-100 shadow-xl">
             <figure>
               <img
                 src={product.image_url}
                 alt={product.name}
-                style={{ width: "150px", height: "150px", objectFit: "cover" }}
+                className="h-56 w-full object-cover"
               />
             </figure>
-            <div>
-              <h2>{product.name}</h2>
+            <div className="card-body">
+              <h2 className="card-title">{product.name}</h2>
               <p>{product.description}</p>
-              <div>
-                <span>{product.price.toLocaleString()}원</span>
-                <button>상세보기</button>
+              <div className="card-actions justify-end items-center mt-2">
+                <span className="text-lg font-semibold">
+                  {product.price.toLocaleString()}원
+                </span>
+                <button
+                  className="btn btn-primary"
+                  onClick={() =>
+                    console.log(`${product.name}을(를) 장바구니에 담았습니다.`)
+                  }
+                >
+                  장바구니에 담기
+                </button>
               </div>
             </div>
           </div>
