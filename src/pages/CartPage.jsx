@@ -5,6 +5,12 @@ function CartPage() {
   const cart = useCartStore((state) => state.cart);
   const increaseQuantity = useCartStore((state) => state.increaseQuantity);
   const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
+  const clearCart = useCartStore((state) => state.clearCart);
+
+  const totalPrice = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   if (cart.length === 0) {
     return (
@@ -84,6 +90,26 @@ function CartPage() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "1rem",
+          borderTop: "1px solid #e5e7eb",
+          marginTop: "1rem",
+        }}
+      >
+        <div>
+          <button onClick={clearCart}>장바구니 비우기</button>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <p style={{ fontSize: "1.25rem", fontWeight: "bold" }}>
+            총액: {totalPrice.toLocaleString()}원
+          </p>
+        </div>
       </div>
     </div>
   );
