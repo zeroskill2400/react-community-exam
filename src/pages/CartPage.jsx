@@ -2,8 +2,9 @@ import useCartStore from "../stores/cartStore";
 import { Link } from "react-router-dom";
 
 function CartPage() {
-  // 기능 구현을 위해 cart 상태만 가져옵니다.
   const cart = useCartStore((state) => state.cart);
+  const increaseQuantity = useCartStore((state) => state.increaseQuantity);
+  const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
 
   if (cart.length === 0) {
     return (
@@ -46,6 +47,9 @@ function CartPage() {
               <th style={{ textAlign: "left", padding: "0.5rem" }}>이름</th>
               <th style={{ textAlign: "left", padding: "0.5rem" }}>가격</th>
               <th style={{ textAlign: "left", padding: "0.5rem" }}>수량</th>
+              <th style={{ textAlign: "left", padding: "0.5rem" }}>
+                수량 조절
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -67,6 +71,15 @@ function CartPage() {
                   {item.price.toLocaleString()}원
                 </td>
                 <td style={{ padding: "0.5rem" }}>{item.quantity}</td>
+                <td style={{ padding: "0.5rem" }}>
+                  <button
+                    onClick={() => decreaseQuantity(item.id)}
+                    style={{ marginRight: "0.5rem" }}
+                  >
+                    -
+                  </button>
+                  <button onClick={() => increaseQuantity(item.id)}>+</button>
+                </td>
               </tr>
             ))}
           </tbody>
