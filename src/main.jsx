@@ -10,6 +10,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
+import ProductListPage from "./pages/ProductListPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "posts",
         element: <PostListPage />,
+      },
+      {
+        path: "products",
+        element: <ProductListPage />,
       },
       {
         path: "write",

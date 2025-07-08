@@ -18,6 +18,9 @@ function Header() {
           <li>
             <Link to="/posts">게시판</Link>
           </li>
+          <li>
+            <Link to="/products">상품 목록</Link>
+          </li>
           {!user && (
             <>
               <li>
