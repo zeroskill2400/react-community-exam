@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { supabase } from "../libs/supabase";
 import { useUserStore } from "../stores/userStore";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import useCartStore from "../stores/cartStore";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -10,27 +11,42 @@ function LoginPage() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const addToCart = useCartStore((state) => state.addToCart);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    setLoading(false);
+      if (error) throw error;
 
-    if (error) {
+      useUserStore.getState().setUser(data.user);
+
+      // --- 리디렉션 로직 ---
+      const productToAdd = location.state?.productToAdd;
+      if (productToAdd) {
+        // 담으려던 상품이 있으면 장바구니에 추가하고
+        addToCart(productToAdd);
+        // 장바구니 페이지로 이동합니다.
+        navigate("/cart", { replace: true });
+      } else {
+        // 그렇지 않으면, 원래 가려던 곳이나 메인 페이지로 이동합니다.
+        const from = location.state?.from?.pathname || "/";
+        navigate(from, { replace: true });
+      }
+    } catch (error) {
       setError(error.message);
       console.error("로그인 실패", error);
-      return;
+    } finally {
+      setLoading(false);
     }
-
-    useUserStore.getState().setUser(data.user);
-    navigate("/");
   };
 
   return (

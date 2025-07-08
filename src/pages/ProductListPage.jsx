@@ -1,15 +1,27 @@
 import { useEffect, useState } from "react";
 import { getProducts } from "../apis/productApi";
 import useCartStore from "../stores/cartStore";
+import { useUserStore } from "../stores/userStore";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function ProductListPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const cart = useCartStore((state) => state.cart);
   const addToCart = useCartStore((state) => state.addToCart);
+  const user = useUserStore((state) => state.user);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleAddToCart = (product) => {
-    addToCart(product);
+    if (user) {
+      addToCart(product);
+      alert(`${product.name}을(를) 장바구니에 담았습니다.`);
+    } else {
+      alert("로그인이 필요합니다.");
+      // 로그인 페이지로 이동하면서, 현재 위치와 담으려던 상품 정보를 state로 전달합니다.
+      navigate("/login", { state: { from: location, productToAdd: product } });
+    }
   };
 
   useEffect(() => {

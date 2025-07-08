@@ -25,14 +25,6 @@ function Header() {
           <li>
             <Link to="/products">상품 목록</Link>
           </li>
-          <li>
-            <Link to="/cart" className="flex items-center">
-              장바구니
-              {totalItems > 0 && (
-                <div className="badge badge-primary ml-2">{totalItems}</div>
-              )}
-            </Link>
-          </li>
           {!user && (
             <>
               <li>
@@ -44,9 +36,19 @@ function Header() {
             </>
           )}
           {user && (
-            <li>
-              <Link to="/profile">내 정보</Link>
-            </li>
+            <>
+              <li>
+                <Link to="/cart" className="flex items-center">
+                  장바구니
+                  {totalItems > 0 && (
+                    <div className="badge badge-primary ml-2">{totalItems}</div>
+                  )}
+                </Link>
+              </li>
+              <li>
+                <Link to="/profile">내 정보</Link>
+              </li>
+            </>
           )}
         </ul>
       </div>
