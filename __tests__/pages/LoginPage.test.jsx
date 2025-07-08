@@ -5,7 +5,7 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 
 // 1. 모듈을 통째로 모킹합니다.
 // 이렇게 하면 supabase와 그 안의 모든 함수가 자동으로 가짜 함수(vi.fn())로 대체됩니다.
-vi.mock("../libs/supabase");
+vi.mock("../../src/libs/supabase");
 
 // navigate 가짜 함수를 모킹 스코프 외부에 선언
 const navigateMock = vi.fn();
@@ -21,9 +21,9 @@ vi.mock("react-router-dom", async (importOriginal) => {
 });
 
 // 모킹 후에 테스트 대상과 모킹된 모듈을 가져옵니다.
-import { supabase } from "../libs/supabase";
-import LoginPage from "./LoginPage";
-import { useUserStore } from "../stores/userStore";
+import { supabase } from "../../src/libs/supabase";
+import LoginPage from "../../src/pages/LoginPage";
+import { useUserStore } from "../../src/stores/userStore";
 
 describe("LoginPage 통합 테스트", () => {
   // 각 테스트가 실행되기 전에 모든 모의(mock) 상태를 초기화합니다.
