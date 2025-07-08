@@ -6,6 +6,7 @@ function CartPage() {
   const increaseQuantity = useCartStore((state) => state.increaseQuantity);
   const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
   const clearCart = useCartStore((state) => state.clearCart);
+  const removeFromCart = useCartStore((state) => state.removeFromCart); // 삭제 기능을 위해 추가
 
   const totalPrice = cart.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -14,77 +15,69 @@ function CartPage() {
 
   if (cart.length === 0) {
     return (
-      <div style={{ padding: "1rem", textAlign: "center" }}>
-        <h1
-          style={{
-            fontSize: "1.875rem",
-            fontWeight: "bold",
-            marginBottom: "1rem",
-          }}
-        >
-          장바구니
-        </h1>
-        <p style={{ marginBottom: "1rem" }}>장바구니가 비어있습니다.</p>
-        <Link to="/products">
-          <button>상품 보러가기</button>
+      <div className="p-4 text-center">
+        <h1 className="text-3xl font-bold mb-4">장바구니</h1>
+        <p className="mb-4">장바구니가 비어있습니다.</p>
+        <Link to="/products" className="btn btn-primary">
+          상품 보러가기
         </Link>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h1
-        style={{
-          fontSize: "1.875rem",
-          fontWeight: "bold",
-          textAlign: "center",
-          marginBottom: "1.5rem",
-        }}
-      >
-        장바구니
-      </h1>
+    <div className="p-4">
+      <h1 className="text-3xl font-bold text-center mb-6">장바구니</h1>
 
-      <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", marginBottom: "1.5rem" }}>
+      <div className="overflow-x-auto">
+        <table className="table w-full mb-6">
           <thead>
             <tr>
-              <th style={{ textAlign: "left", padding: "0.5rem" }}>상품</th>
-              <th style={{ textAlign: "left", padding: "0.5rem" }}>이름</th>
-              <th style={{ textAlign: "left", padding: "0.5rem" }}>가격</th>
-              <th style={{ textAlign: "left", padding: "0.5rem" }}>수량</th>
-              <th style={{ textAlign: "left", padding: "0.5rem" }}>
-                수량 조절
-              </th>
+              <th>상품</th>
+              <th>이름</th>
+              <th>가격</th>
+              <th>수량</th>
+              <th>합계</th>
+              <th>삭제</th>
             </tr>
           </thead>
           <tbody>
             {cart.map((item) => (
               <tr key={item.id}>
-                <td style={{ padding: "0.5rem" }}>
+                <td>
                   <img
                     src={item.image_url}
                     alt={item.name}
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      objectFit: "cover",
-                    }}
+                    className="w-20 h-20 object-cover rounded"
                   />
                 </td>
-                <td style={{ padding: "0.5rem" }}>{item.name}</td>
-                <td style={{ padding: "0.5rem" }}>
-                  {item.price.toLocaleString()}원
+                <td>{item.name}</td>
+                <td>{item.price.toLocaleString()}원</td>
+                <td>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => decreaseQuantity(item.id)}
+                      className="btn btn-sm"
+                    >
+                      -
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button
+                      onClick={() => increaseQuantity(item.id)}
+                      className="btn btn-sm"
+                    >
+                      +
+                    </button>
+                  </div>
                 </td>
-                <td style={{ padding: "0.5rem" }}>{item.quantity}</td>
-                <td style={{ padding: "0.5rem" }}>
+                <td>{(item.price * item.quantity).toLocaleString()}원</td>
+                <td>
                   <button
-                    onClick={() => decreaseQuantity(item.id)}
-                    style={{ marginRight: "0.5rem" }}
+                    onClick={() => removeFromCart(item.id)}
+                    className="btn btn-ghost"
                   >
-                    -
+                    삭제
                   </button>
-                  <button onClick={() => increaseQuantity(item.id)}>+</button>
                 </td>
               </tr>
             ))}
@@ -92,23 +85,17 @@ function CartPage() {
         </table>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "1rem",
-          borderTop: "1px solid #e5e7eb",
-          marginTop: "1rem",
-        }}
-      >
+      <div className="flex flex-col md:flex-row justify-between items-center bg-base-200 p-4 rounded-lg gap-4">
         <div>
-          <button onClick={clearCart}>장바구니 비우기</button>
+          <button onClick={clearCart} className="btn btn-outline btn-error">
+            장바구니 비우기
+          </button>
         </div>
-        <div style={{ textAlign: "right" }}>
-          <p style={{ fontSize: "1.25rem", fontWeight: "bold" }}>
+        <div className="text-center md:text-right">
+          <p className="text-2xl font-bold">
             총액: {totalPrice.toLocaleString()}원
           </p>
+          <button className="btn btn-primary mt-2">결제하기</button>
         </div>
       </div>
     </div>
