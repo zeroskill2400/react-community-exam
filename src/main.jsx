@@ -9,12 +9,17 @@ import ErrorPage from "./pages/ErrorPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
+import HomePage from "./pages/HomePage.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
       {
         path: "posts",
         element: <PostListPage />,
