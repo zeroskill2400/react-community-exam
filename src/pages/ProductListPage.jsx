@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
 import { getProducts } from "../apis/productApi";
+import useCartStore from "../stores/cartStore";
 
 function ProductListPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const cart = useCartStore((state) => state.cart);
+  const addToCart = useCartStore((state) => state.addToCart);
+
+  const handleAddToCart = (product) => {
+    addToCart(product);
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -52,9 +59,7 @@ function ProductListPage() {
                 </span>
                 <button
                   className="btn btn-primary"
-                  onClick={() =>
-                    console.log(`${product.name}을(를) 장바구니에 담았습니다.`)
-                  }
+                  onClick={() => handleAddToCart(product)}
                 >
                   장바구니에 담기
                 </button>
