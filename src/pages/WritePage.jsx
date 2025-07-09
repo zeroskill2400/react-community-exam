@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { useUserStore } from "../stores/userStore";
 import { supabase } from "../libs/supabase";
 
@@ -14,16 +13,14 @@ const postSchema = z.object({
 
 function WritePage() {
   const navigate = useNavigate();
-  const { user } = useUserStore();
+  const user = useUserStore((s) => s.user);
 
-  useEffect(() => {
-    if (!user) {
-      alert("로그인이 필요합니다.");
-      navigate("/login");
-    }
-  }, [user, navigate]);
+  // 로그인하지 않은 사용자는 접근 불가
+  if (!user) {
+    navigate("/login", { replace: true });
+    return null;
+  }
 
-  // 2. useForm 훅으로 폼 상태 및 함수 가져오기
   const {
     register,
     handleSubmit,
@@ -32,25 +29,17 @@ function WritePage() {
     resolver: zodResolver(postSchema),
   });
 
-  // 3. 폼 제출 시 실행될 함수 정의 (유효성 검사 통과 후)
+  // Supabase로 게시물 작성
   const onSubmit = async (data) => {
-    if (!user) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
-
     try {
-      const { error } = await supabase.from("posts").insert({
-        title: data.title,
-        content: data.content,
-        user_id: user.id,
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      // 요청이 성공적으로 완료된 후, 목록 페이지로 이동
+      const { error } = await supabase.from("posts").insert([
+        {
+          title: data.title,
+          content: data.content,
+          user_id: user.id,
+        },
+      ]);
+      if (error) throw error;
       navigate("/posts");
     } catch (error) {
       console.error("게시물 작성 중 에러 발생:", error);
@@ -58,19 +47,9 @@ function WritePage() {
     }
   };
 
-  if (!user) {
-    return null;
-  }
-
   return (
     <div className="max-w-4xl mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">새 게시물 작성</h1>
-      <div className="mb-4 p-3 bg-gray-100 rounded">
-        <span className="text-sm text-gray-600">
-          작성자: {user.name || user.email}
-        </span>
-      </div>
-
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="form-control">
           <label className="label" htmlFor="title">
@@ -87,7 +66,6 @@ function WritePage() {
             <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>
           )}
         </div>
-
         <div className="form-control">
           <label className="label" htmlFor="content">
             <span className="label-text">내용</span>
@@ -104,7 +82,6 @@ function WritePage() {
             </p>
           )}
         </div>
-
         <button
           type="submit"
           disabled={isSubmitting}
