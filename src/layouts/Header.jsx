@@ -7,11 +7,12 @@ import { useEffect } from "react";
 function Header() {
   const user = useUserStore((s) => s.user);
   const clearUser = useUserStore((s) => s.clearUser);
-  const { cartItemCount, loadCartItems } = useCartStore();
+  const { cartItemCount, loadCartItems, resetCart } = useCartStore();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     clearUser();
+    resetCart();
   };
 
   // 사용자 로그인 시 장바구니 데이터 로드
