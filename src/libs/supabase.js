@@ -127,3 +127,39 @@ export const addToCart = async ({ user_id, product_id, quantity }) => {
     return data;
   }
 };
+
+/**
+ * 장바구니에 가장 많이 담긴 상품 상위 랭킹을 가져온다.
+ * @param {number} limit - 가져올 상품 개수
+ */
+export const fetchTopCartProducts = async (limit = 4) => {
+  // cart_items 테이블에서 product_id별로 quantity 합계를 집계, 내림차순 정렬
+  const { data, error } = await supabase
+    .from("cart_items")
+    .select("product_id, quantity")
+    .order("quantity", { ascending: false })
+    .limit(limit);
+
+  if (error) throw error;
+
+  // product 정보도 함께 가져오기
+  const productIds = data.map((item) => item.product_id);
+  if (productIds.length === 0) return [];
+
+  const { data: products, error: prodError } = await supabase
+    .from("products")
+    .select("*")
+    .in("id", productIds);
+
+  if (prodError) throw prodError;
+
+  // product 정보와 quantity를 합쳐서 반환
+  return productIds.map((pid) => {
+    const product = products.find((p) => p.id === pid);
+    const cartItem = data.find((item) => item.product_id === pid);
+    return {
+      ...product,
+      cart_count: cartItem ? cartItem.quantity : 0,
+    };
+  });
+};
