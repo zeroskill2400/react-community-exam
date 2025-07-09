@@ -1,11 +1,18 @@
 import { Link } from "react-router-dom";
 import { useUserStore } from "../stores/userStore";
 import { useCartStore } from "../stores/cartStore";
+import { supabase } from "../libs/supabase";
 import { useEffect } from "react";
 
 function Header() {
   const user = useUserStore((s) => s.user);
+  const clearUser = useUserStore((s) => s.clearUser);
   const { cartItemCount, loadCartItems } = useCartStore();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    clearUser();
+  };
 
   // 사용자 로그인 시 장바구니 데이터 로드
   useEffect(() => {
@@ -55,9 +62,14 @@ function Header() {
             </>
           )}
           {user && (
-            <li>
-              <Link to="/profile">내 정보</Link>
-            </li>
+            <>
+              <li>
+                <Link to="/profile">내 정보</Link>
+              </li>
+              <li>
+                <a onClick={handleLogout}>로그아웃</a>
+              </li>
+            </>
           )}
         </ul>
       </div>
