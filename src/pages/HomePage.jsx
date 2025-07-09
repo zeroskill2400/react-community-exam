@@ -1,8 +1,29 @@
 import { Link } from "react-router-dom";
 import { useUserStore } from "../stores/userStore";
+import { useEffect, useState } from "react";
+import { fetchTopCartProducts } from "../libs/supabase";
 
 function HomePage() {
   const user = useUserStore((s) => s.user);
+  const [topProducts, setTopProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadTopProducts = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await fetchTopCartProducts(5);
+        setTopProducts(data);
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadTopProducts();
+  }, []);
 
   return (
     <div className="container mx-auto p-4 lg:p-8">
@@ -110,6 +131,49 @@ function HomePage() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* 장바구니 인기상품 TOP 5 섹션 */}
+      <div className="mb-12">
+        <h2 className="text-3xl font-bold mb-6">장바구니 인기상품 TOP 4</h2>
+        {loading ? (
+          <div>로딩 중...</div>
+        ) : error ? (
+          <div className="text-red-500">에러: {error}</div>
+        ) : topProducts.length === 0 ? (
+          <div>랭킹 데이터가 없습니다.</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {topProducts.slice(0, 4).map((item, i) => (
+              <div key={item.id} className="card bg-base-100 shadow-lg">
+                <figure className="px-4 pt-4">
+                  <img
+                    src={
+                      item.image_url ||
+                      `https://picsum.photos/300/200?random=${i + 10}`
+                    }
+                    alt={item.name}
+                    className="rounded-xl h-48 w-full object-cover"
+                  />
+                </figure>
+                <div className="card-body">
+                  <h3 className="card-title">{item.name}</h3>
+                  <p className="text-primary font-bold">
+                    ₩{item.price?.toLocaleString() ?? "-"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {item.cart_count}회 장바구니 담김
+                  </p>
+                  <div className="card-actions justify-end">
+                    <Link to="/products" className="btn btn-primary btn-sm">
+                      보러가기
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* CTA 섹션 */}
